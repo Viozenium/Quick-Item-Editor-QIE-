@@ -1,0 +1,23 @@
+{
+  "QIE.ModuleTitle": "Quick Item Editor",
+  "QIE.GlobalEdit": "Global Edit",
+  "QIE.GlobalEditHint": "Open the global item editor",
+  "QIE.WindowTitle": "Global Item Editor",
+
+  "QIE.Uncategorized": "No folder",
+  "QIE.NoItems": "There are no items in this world.",
+  "QIE.ItemCount": "{count} items",
+  "QIE.FolderCount": "{count} folders",
+
+  "QIE.Column.Name": "Name",
+  "QIE.Column.Weight": "Weight",
+  "QIE.Column.Price": "Price",
+  "QIE.Column.Description": "Description",
+  "QIE.Column.Rarity": "Rarity",
+
+  "QIE.Action.ExpandAll": "Expand all",
+  "QIE.Action.CollapseAll": "Collapse all",
+  "QIE.Action.Refresh": "Refresh",
+
+  "QIE.Notify.GMOnly": "Only the Game Master can use the global item editor."
+}

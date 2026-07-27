@@ -1,0 +1,29 @@
+<div class="qie-toolbar">
+  <span class="qie-summary">
+    <i class="fas fa-box"></i>
+    {{countLabel}}
+    <span class="qie-sep">&middot;</span>
+    <i class="fas fa-folder"></i>
+    {{folderLabel}}
+  </span>
+</div>
+
+<div class="qie-body">
+  {{#if hasItems}}
+    <ul class="qie-folder-list">
+      {{#each folders}}
+        <li
+          class="qie-folder"
+          data-folder-id="{{this.id}}"
+          style="--qie-depth: {{this.depth}}"
+        >
+          <i class="fas fa-folder"></i>
+          <span class="qie-folder-name">{{this.name}}</span>
+          <span class="qie-folder-count">{{this.count}}</span>
+        </li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p class="qie-empty">{{localize "QIE.NoItems"}}</p>
+  {{/if}}
+</div>

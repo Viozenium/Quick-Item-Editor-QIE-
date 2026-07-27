@@ -1,0 +1,23 @@
+{
+  "QIE.ModuleTitle": "Quick Item Editor",
+  "QIE.GlobalEdit": "Modifica globale",
+  "QIE.GlobalEditHint": "Apri l'editor globale degli oggetti",
+  "QIE.WindowTitle": "Modifica globale oggetti",
+
+  "QIE.Uncategorized": "Senza cartella",
+  "QIE.NoItems": "Nessun oggetto presente nel mondo.",
+  "QIE.ItemCount": "{count} oggetti",
+  "QIE.FolderCount": "{count} cartelle",
+
+  "QIE.Column.Name": "Titolo",
+  "QIE.Column.Weight": "Peso",
+  "QIE.Column.Price": "Prezzo",
+  "QIE.Column.Description": "Descrizione",
+  "QIE.Column.Rarity": "Rarità",
+
+  "QIE.Action.ExpandAll": "Espandi tutto",
+  "QIE.Action.CollapseAll": "Comprimi tutto",
+  "QIE.Action.Refresh": "Ricarica",
+
+  "QIE.Notify.GMOnly": "Solo il Game Master può usare l'editor globale degli oggetti."
+}

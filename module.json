@@ -1,0 +1,49 @@
+{
+  "id": "quick-item-editor",
+  "title": "Quick Item Editor (QIE)",
+  "description": "Aggiunge un pulsante \"Modifica globale\" nella barra laterale degli Item e apre un editor a tabella per modificare titolo, peso, prezzo, descrizione e rarità di tutti gli oggetti del mondo, con ricerca, filtri e salvataggio in tempo reale.",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "14",
+    "maximum": "14"
+  },
+  "authors": [
+    {
+      "name": "Viozenium",
+      "url": "https://github.com/Viozenium"
+    }
+  ],
+  "relationships": {
+    "systems": [
+      {
+        "id": "dnd5e",
+        "type": "system",
+        "compatibility": {}
+      }
+    ]
+  },
+  "esmodules": [
+    "scripts/qie.mjs"
+  ],
+  "styles": [
+    "styles/qie.css"
+  ],
+  "languages": [
+    {
+      "lang": "it",
+      "name": "Italiano",
+      "path": "lang/it.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "url": "https://github.com/Viozenium/Quick-Item-Editor-QIE-",
+  "manifest": "https://github.com/Viozenium/Quick-Item-Editor-QIE-/releases/latest/download/module.json",
+  "download": "https://github.com/Viozenium/Quick-Item-Editor-QIE-/releases/latest/download/module.zip",
+  "license": "LICENSE",
+  "readme": "README.md"
+}
