@@ -1,21 +1,24 @@
 import { MODULE_ID } from "./constants.mjs";
 import { GlobalItemEditor } from "./apps/global-item-editor.mjs";
+import { registerTemplates } from "./templates.mjs";
 
 /**
  * Punto di ingresso del modulo.
  * Registra l'API pubblica e inietta il pulsante "Modifica globale"
  * nell'intestazione della barra laterale degli Item.
  */
-
-Hooks.once("init", () => {
+Hooks.once("init", async () => {
   const module = game.modules.get(MODULE_ID);
   if (module)
     module.api = { GlobalItemEditor, open: () => GlobalItemEditor.show() };
+  await registerTemplates();
   console.log(`${MODULE_ID} | inizializzato`);
 });
 
+// Foundry v13+ passa un HTMLElement.
+// fallback per sicurezza.
+
 Hooks.on("renderItemDirectory", (app, element) => {
-  // Foundry v13+ passa un HTMLElement; manteniamo il fallback per sicurezza.
   const root = element instanceof HTMLElement ? element : element?.[0];
   if (!root) return;
   if (!game.user.isGM) return;

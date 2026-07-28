@@ -1,29 +1,35 @@
-<div class="qie-toolbar">
-  <span class="qie-summary">
-    <i class="fas fa-box"></i>
-    {{countLabel}}
-    <span class="qie-sep">&middot;</span>
-    <i class="fas fa-folder"></i>
-    {{folderLabel}}
-  </span>
-</div>
+<div class="qie-main">
+  <div class="qie-toolbar">
+    <span class="qie-summary">
+      <i class="fas fa-box"></i>
+      {{countLabel}}
+      <span class="qie-sep">&middot;</span>
+      <i class="fas fa-folder"></i>
+      {{folderLabel}}
+    </span>
 
-<div class="qie-body">
-  {{#if hasItems}}
-    <ul class="qie-folder-list">
-      {{#each folders}}
-        <li
-          class="qie-folder"
-          data-folder-id="{{this.id}}"
-          style="--qie-depth: {{this.depth}}"
-        >
-          <i class="fas fa-folder"></i>
-          <span class="qie-folder-name">{{this.name}}</span>
-          <span class="qie-folder-count">{{this.count}}</span>
-        </li>
+    <div class="qie-toolbar-actions">
+      <button type="button" data-action="expandAll" data-tooltip="{{localize 'QIE.Action.ExpandAll'}}">
+        <i class="fas fa-angles-down"></i>
+      </button>
+      <button type="button" data-action="collapseAll" data-tooltip="{{localize 'QIE.Action.CollapseAll'}}">
+        <i class="fas fa-angles-up"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="qie-body">
+    {{#if hasItems}}
+    <ul class="qie-tree">
+      {{#each tree.children}}
+      {{> qieFolder}}
+      {{/each}}
+      {{#each tree.entries}}
+      {{> qieItem}}
       {{/each}}
     </ul>
-  {{else}}
+    {{else}}
     <p class="qie-empty">{{localize "QIE.NoItems"}}</p>
-  {{/if}}
+    {{/if}}
+  </div>
 </div>

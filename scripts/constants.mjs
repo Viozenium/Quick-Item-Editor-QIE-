@@ -1,7 +1,4 @@
-/**
- * Costanti condivise del modulo Quick Item Editor.
- */
-
+/** Costanti condivise del modulo Quick Item Editor. */
 export const MODULE_ID = "quick-item-editor";
 
 /** Percorso base per template e asset del modulo. */

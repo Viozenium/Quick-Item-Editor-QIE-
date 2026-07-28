@@ -1,0 +1,18 @@
+<li class="qie-node qie-folder" data-folder-id="{{id}}">
+  <details class="qie-details" {{#if expanded}}open{{/if}}>
+    <summary class="qie-folder-header" style="{{colorStyle}}">
+      <i class="fas fa-caret-right qie-caret"></i>
+      <i class="fas fa-folder qie-folder-icon"></i>
+      <span class="qie-folder-name">{{name}}</span>
+      <span class="qie-folder-count">{{total}}</span>
+    </summary>
+    <ul class="qie-children">
+      {{#each children}}
+      {{> qieFolder}}
+      {{/each}}
+      {{#each entries}}
+      {{> qieItem}}
+      {{/each}}
+    </ul>
+  </details>
+</li>

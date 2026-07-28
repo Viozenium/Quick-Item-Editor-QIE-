@@ -23,12 +23,8 @@
       }
     ]
   },
-  "esmodules": [
-    "scripts/qie.mjs"
-  ],
-  "styles": [
-    "styles/qie.css"
-  ],
+  "esmodules": ["scripts/qie.mjs"],
+  "styles": ["styles/qie.css"],
   "languages": [
     {
       "lang": "it",
