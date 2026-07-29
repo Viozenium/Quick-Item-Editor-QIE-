@@ -2,7 +2,7 @@
   "id": "Quick-Item-Editor-QIE-",
   "title": "Quick Item Editor (QIE)",
   "description": "Aggiunge un pulsante \"Modifica globale\" nella barra laterale degli Item e apre un editor a tabella per modificare titolo, peso, prezzo, descrizione e rarità di tutti gli oggetti del mondo, con ricerca, filtri e salvataggio in tempo reale.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "compatibility": {
     "minimum": "13",
     "verified": "14",
