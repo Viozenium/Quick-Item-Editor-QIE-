@@ -6,14 +6,29 @@
 
   "QIE.Uncategorized": "No folder",
   "QIE.NoItems": "There are no items in this world.",
+  "QIE.NoResults": "No item matches the current filters.",
   "QIE.ItemCount": "{count} items",
   "QIE.FolderCount": "{count} folders",
+  "QIE.Results": "{visible} of {total} shown",
 
   "QIE.Column.Name": "Name",
   "QIE.Column.Weight": "Weight",
   "QIE.Column.Price": "Price",
   "QIE.Column.Description": "Description",
   "QIE.Column.Rarity": "Rarity",
+
+  "QIE.Search.Placeholder": "Search by name...",
+
+  "QIE.Filters.Title": "Filters",
+  "QIE.Filters.Description": "Description",
+  "QIE.Filters.Rarity": "Rarity",
+  "QIE.Filters.Weight": "Weight",
+  "QIE.Filters.Price": "Price (in gp)",
+  "QIE.Filters.Min": "min",
+  "QIE.Filters.Max": "max",
+  "QIE.Filters.Any": "Any",
+  "QIE.Filters.NoRarity": "No rarity",
+  "QIE.Filters.Clear": "Reset",
 
   "QIE.Action.ExpandAll": "Expand all",
   "QIE.Action.CollapseAll": "Collapse all",

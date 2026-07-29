@@ -11,7 +11,7 @@ button.qie-global-edit {
   white-space: nowrap;
 }
 
-button.qie-global-edit > i {
+button.qie-global-edit>i {
   margin: 0;
 }
 
@@ -37,11 +37,100 @@ button.qie-global-edit > i {
 
 .qie-global-item-editor .qie-toolbar {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 6px;
   flex: 0 0 auto;
   padding-bottom: 6px;
   border-bottom: 1px solid var(--color-border-light-tertiary, #7a7971);
+}
+
+.qie-global-item-editor .qie-toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qie-global-item-editor .qie-search-wrapper {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qie-global-item-editor .qie-search-wrapper>i {
+  flex: 0 0 auto;
+  opacity: 0.6;
+}
+
+.qie-global-item-editor .qie-search {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/*  Pannello filtri */
+
+.qie-global-item-editor .qie-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 4px;
+  background: rgba(127, 127, 127, 0.12);
+}
+
+.qie-global-item-editor .qie-filters[hidden] {
+  display: none;
+}
+
+.qie-global-item-editor .qie-filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 0 1 auto;
+}
+
+.qie-global-item-editor .qie-filter-field>span {
+  font-size: var(--font-size-11, 11px);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.qie-global-item-editor .qie-filter-wide {
+  flex: 1 1 180px;
+  min-width: 140px;
+}
+
+.qie-global-item-editor .qie-range-inputs {
+  display: flex;
+  gap: 4px;
+}
+
+.qie-global-item-editor .qie-range-inputs input {
+  width: 68px;
+}
+
+.qie-global-item-editor .qie-clear {
+  flex: 0 0 auto;
+  width: auto;
+  height: 28px;
+  padding: 0 10px;
+  white-space: nowrap;
+}
+
+.qie-global-item-editor .qie-toolbar-status {
+  justify-content: space-between;
+}
+
+.qie-global-item-editor .qie-result-count {
+  font-size: var(--font-size-12, 12px);
+  opacity: 0.8;
+  font-weight: bold;
+}
+
+.qie-global-item-editor .qie-hidden {
+  display: none !important;
 }
 
 .qie-global-item-editor .qie-summary {
@@ -78,12 +167,12 @@ button.qie-global-edit > i {
   padding-left: 14px;
 }
 
-.qie-global-item-editor .qie-details > summary {
+.qie-global-item-editor .qie-details>summary {
   list-style: none;
   cursor: pointer;
 }
 
-.qie-global-item-editor .qie-details > summary::-webkit-details-marker {
+.qie-global-item-editor .qie-details>summary::-webkit-details-marker {
   display: none;
 }
 
@@ -95,19 +184,15 @@ button.qie-global-edit > i {
   border-radius: 4px;
   border-left: 4px solid var(--qie-folder-color, transparent);
   font-weight: bold;
-  background: color-mix(
-    in srgb,
-    var(--qie-folder-color, transparent) 22%,
-    transparent
-  );
+  background: color-mix(in srgb,
+      var(--qie-folder-color, transparent) 22%,
+      transparent);
 }
 
 .qie-global-item-editor .qie-folder-header:hover {
-  background: color-mix(
-    in srgb,
-    var(--qie-folder-color, #808080) 40%,
-    transparent
-  );
+  background: color-mix(in srgb,
+      var(--qie-folder-color, #808080) 40%,
+      transparent);
 }
 
 .qie-global-item-editor .qie-caret {
@@ -116,7 +201,7 @@ button.qie-global-edit > i {
   transition: transform 120ms ease;
 }
 
-.qie-global-item-editor .qie-details[open] > summary .qie-caret {
+.qie-global-item-editor .qie-details[open]>summary .qie-caret {
   transform: rotate(90deg);
 }
 
@@ -164,11 +249,28 @@ button.qie-global-edit > i {
   white-space: nowrap;
 }
 
-.qie-global-item-editor .qie-item-type {
+/*  Colonne a larghezza fissa, così i valori restano incolonnati anche a profondità di annidamento diverse. */
+
+.qie-global-item-editor .qie-cell {
   flex: 0 0 auto;
-  font-size: var(--font-size-11, 11px);
-  opacity: 0.6;
-  text-transform: lowercase;
+  font-size: var(--font-size-12, 12px);
+  opacity: 0.75;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.qie-global-item-editor .qie-item-rarity {
+  width: 110px;
+}
+
+.qie-global-item-editor .qie-item-weight {
+  width: 55px;
+}
+
+.qie-global-item-editor .qie-item-price {
+  width: 85px;
 }
 
 .qie-global-item-editor .qie-toolbar-actions {

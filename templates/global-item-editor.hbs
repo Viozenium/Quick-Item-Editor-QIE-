@@ -1,20 +1,98 @@
 <div class="qie-main">
   <div class="qie-toolbar">
-    <span class="qie-summary">
-      <i class="fas fa-box"></i>
-      {{countLabel}}
-      <span class="qie-sep">&middot;</span>
-      <i class="fas fa-folder"></i>
-      {{folderLabel}}
-    </span>
+    <div class="qie-toolbar-row">
+      <div class="qie-search-wrapper">
+        <i class="fas fa-magnifying-glass"></i>
+        <input
+          type="search"
+          class="qie-search"
+          data-filter="name"
+          placeholder="{{localize 'QIE.Search.Placeholder'}}"
+          autocomplete="off"
+        />
+      </div>
 
-    <div class="qie-toolbar-actions">
-      <button type="button" data-action="expandAll" data-tooltip="{{localize 'QIE.Action.ExpandAll'}}">
-        <i class="fas fa-angles-down"></i>
+      <div class="qie-toolbar-actions">
+        <button type="button" data-action="toggleFilters" data-tooltip="{{localize 'QIE.Filters.Title'}}">
+          <i class="fas fa-filter"></i>
+        </button>
+        <button type="button" data-action="expandAll" data-tooltip="{{localize 'QIE.Action.ExpandAll'}}">
+          <i class="fas fa-angles-down"></i>
+        </button>
+        <button type="button" data-action="collapseAll" data-tooltip="{{localize 'QIE.Action.CollapseAll'}}">
+          <i class="fas fa-angles-up"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="qie-filters" {{#unless filtersOpen}}hidden{{/unless}}>
+      <label class="qie-filter-field qie-filter-wide">
+        <span>{{localize "QIE.Filters.Description"}}</span>
+        <input type="text" data-filter="description" autocomplete="off" />
+      </label>
+
+      <label class="qie-filter-field">
+        <span>{{localize "QIE.Filters.Rarity"}}</span>
+        <select data-filter="rarity">
+          <option value="">{{localize "QIE.Filters.Any"}}</option>
+          <option value="__none__">{{localize "QIE.Filters.NoRarity"}}</option>
+          {{#each rarities}}
+          <option value="{{this.value}}">{{this.label}}</option>
+          {{/each}}
+        </select>
+      </label>
+
+      <div class="qie-filter-field qie-filter-range">
+        <span>{{localize "QIE.Filters.Weight"}}</span>
+        <div class="qie-range-inputs">
+          <input
+            type="number"
+            step="any"
+            data-filter="weightMin"
+            placeholder="{{localize 'QIE.Filters.Min'}}"
+          />
+          <input
+            type="number"
+            step="any"
+            data-filter="weightMax"
+            placeholder="{{localize 'QIE.Filters.Max'}}"
+          />
+        </div>
+      </div>
+
+      <div class="qie-filter-field qie-filter-range">
+        <span>{{localize "QIE.Filters.Price"}}</span>
+        <div class="qie-range-inputs">
+          <input
+            type="number"
+            step="any"
+            data-filter="priceMin"
+            placeholder="{{localize 'QIE.Filters.Min'}}"
+          />
+          <input
+            type="number"
+            step="any"
+            data-filter="priceMax"
+            placeholder="{{localize 'QIE.Filters.Max'}}"
+          />
+        </div>
+      </div>
+
+      <button type="button" class="qie-clear" data-action="clearFilters">
+        <i class="fas fa-rotate-left"></i>
+        {{localize "QIE.Filters.Clear"}}
       </button>
-      <button type="button" data-action="collapseAll" data-tooltip="{{localize 'QIE.Action.CollapseAll'}}">
-        <i class="fas fa-angles-up"></i>
-      </button>
+    </div>
+
+    <div class="qie-toolbar-row qie-toolbar-status">
+      <span class="qie-summary">
+        <i class="fas fa-box"></i>
+        {{countLabel}}
+        <span class="qie-sep">&middot;</span>
+        <i class="fas fa-folder"></i>
+        {{folderLabel}}
+      </span>
+      <span class="qie-result-count"></span>
     </div>
   </div>
 
@@ -28,6 +106,7 @@
       {{> qieItem}}
       {{/each}}
     </ul>
+    <p class="qie-empty qie-no-results qie-hidden">{{localize "QIE.NoResults"}}</p>
     {{else}}
     <p class="qie-empty">{{localize "QIE.NoItems"}}</p>
     {{/if}}

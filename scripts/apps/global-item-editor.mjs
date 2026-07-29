@@ -1,16 +1,43 @@
 import { MODULE_ID, MODULE_PATH } from "../constants.mjs";
+import {
+  denominationLabel,
+  normalize,
+  rarityChoices,
+  rarityLabel,
+  readItem,
+} from "../item-data.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
-/** Finestra di modifica globale degli oggetti del mondo. */
+/**
+ * Finestra di modifica globale degli oggetti del mondo.
+ * Il filtraggio avviene sul DOM già renderizzato, così la digitazione resta fluida e non si perde il focus del campo di ricerca.
+ */
 export class GlobalItemEditor extends HandlebarsApplicationMixin(
   ApplicationV2,
 ) {
   /** Istanza singleton, così il pulsante non apre finestre duplicate. */
   static #instance = null;
 
-  /** ID delle cartelle attualmente espanse, conservati tra un render e l'altro. */
+  /** ID delle cartelle espanse dall'utente, conservati tra un render e l'altro. */
   #expanded = new Set();
+
+  /** Indice dei valori normalizzati, per ID oggetto. Ricostruito a ogni render. */
+  #index = new Map();
+
+  /** Stato corrente dei filtri, conservato tra un render e l'altro. */
+  #filters = {
+    name: "",
+    description: "",
+    rarity: "",
+    weightMin: null,
+    weightMax: null,
+    priceMin: null,
+    priceMax: null,
+  };
+
+  /** Il pannello dei filtri è aperto? */
+  #filtersOpen = false;
 
   static DEFAULT_OPTIONS = {
     id: "qie-global-item-editor",
@@ -28,6 +55,8 @@ export class GlobalItemEditor extends HandlebarsApplicationMixin(
     actions: {
       expandAll: GlobalItemEditor.#onExpandAll,
       collapseAll: GlobalItemEditor.#onCollapseAll,
+      toggleFilters: GlobalItemEditor.#onToggleFilters,
+      clearFilters: GlobalItemEditor.#onClearFilters,
     },
   };
 
@@ -53,30 +82,33 @@ export class GlobalItemEditor extends HandlebarsApplicationMixin(
 
   /*  Contesto */
 
-  // L'albero è quello della "collection:"
-  // stesso ordine e stessa gerarchia della barra laterale, modalità di ordinamento dell'utente compresa.
+  // L'albero è quello della collection, stesso ordine e stessa gerarchia della barra laterale, modalità di ordinamento dell'utente compresa.
 
   /** @override */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
     if (!game.items.tree) game.items.initializeTree?.();
+
+    this.#index.clear();
     const root = this.#buildNode(game.items.tree, true);
 
     return Object.assign(context, {
       moduleId: MODULE_ID,
       tree: root,
       hasItems: game.items.size > 0,
+      itemCount: game.items.size,
       countLabel: game.i18n.format("QIE.ItemCount", { count: game.items.size }),
       folderLabel: game.i18n.format("QIE.FolderCount", {
         count: root.folderCount,
       }),
+      filters: this.#filters,
+      filtersOpen: this.#filtersOpen,
+      rarities: rarityChoices(),
     });
   }
 
   /**
    * Converte un nodo dell'albero della collection in un nodo di rendering.
-   * Usare `game.items.tree` garantisce lo stesso ordine della barra laterale.
-   *
    * @param {object} node   Nodo di `game.items.tree`.
    * @param {boolean} isRoot
    * @returns {object}
@@ -111,17 +143,33 @@ export class GlobalItemEditor extends HandlebarsApplicationMixin(
   }
 
   /**
-   * Dati di rendering di un singolo oggetto.
+   * Dati di rendering di un singolo oggetto, popola anche l'indice di ricerca.
    * @param {Item} item
    */
   #prepareItem(item) {
+    const data = readItem(item);
+
+    this.#index.set(data.id, {
+      name: normalize(data.name),
+      description: normalize(data.descriptionText),
+      rarity: data.rarity,
+      weight: data.weight,
+      price: data.priceGold,
+    });
+
     const typeLabel = CONFIG.Item?.typeLabels?.[item.type];
     return {
-      id: item.id,
-      uuid: item.uuid,
-      name: item.name,
-      img: item.img,
+      id: data.id,
+      uuid: data.uuid,
+      name: data.name,
+      img: data.img,
       typeLabel: typeLabel ? game.i18n.localize(typeLabel) : item.type,
+      rarityLabel: rarityLabel(data.rarity),
+      weightLabel: data.weight === null ? "" : String(data.weight),
+      priceLabel:
+        data.priceValue === null
+          ? ""
+          : `${data.priceValue} ${denominationLabel(data.denomination)}`,
     };
   }
 
@@ -139,20 +187,164 @@ export class GlobalItemEditor extends HandlebarsApplicationMixin(
 
   /*  Interazione */
 
-  // Memorizza lo stato aperto/chiuso così un re-render non richiude tutto.
-
   /** @override */
   _onRender(context, options) {
     super._onRender(context, options);
-    for (const details of this.element.querySelectorAll(
-      ".qie-folder > .qie-details",
+
+    // Lo stato aperto/chiuso viene registrato dal click sul summary e non dall'evento "toggle": quest'ultimo scatta anche per le aperture automatiche del filtraggio.
+
+    for (const summary of this.element.querySelectorAll(
+      ".qie-folder > .qie-details > summary",
     )) {
-      details.addEventListener("toggle", () => {
-        const id = details.closest(".qie-folder")?.dataset.folderId;
+      summary.addEventListener("click", () => {
+        const details = summary.closest(".qie-details");
+        const id = summary.closest(".qie-folder")?.dataset.folderId;
         if (!id) return;
-        if (details.open) this.#expanded.add(id);
-        else this.#expanded.delete(id);
+        if (details.open) this.#expanded.delete(id);
+        else this.#expanded.add(id);
       });
+    }
+
+    // Lo stato del filtro si aggiorna subito, il ridisegno è ritardato, l'evento non sopravvivrebbe al debounce, il valore del campo sì.
+
+    const applyDebounced = foundry.utils.debounce(
+      () => this.#applyFilters(),
+      150,
+    );
+    for (const input of this.element.querySelectorAll("[data-filter]")) {
+      const value = this.#filters[input.dataset.filter];
+      input.value = value === null || value === undefined ? "" : value;
+
+      const handler = () => {
+        this.#readFilter(input);
+        applyDebounced();
+      };
+      input.addEventListener("input", handler);
+      input.addEventListener("change", handler);
+    }
+
+    this.#applyFilters();
+  }
+
+  /**
+   * Aggiorna lo stato dei filtri leggendo il campo indicato.
+   * @param {HTMLInputElement|HTMLSelectElement} input
+   */
+  #readFilter(input) {
+    const key = input.dataset.filter;
+    if (!(key in this.#filters)) return;
+
+    if (input.type === "number") {
+      const number = Number(input.value);
+      this.#filters[key] =
+        input.value === "" || !Number.isFinite(number) ? null : number;
+    } else {
+      this.#filters[key] = input.value;
+    }
+  }
+
+  /** Qualche filtro è impostato? */
+  get #isFiltering() {
+    return Object.values(this.#filters).some(
+      (value) => value !== "" && value !== null,
+    );
+  }
+
+  /**
+   * Un oggetto supera i filtri correnti?
+   * @param {object} data  Voce dell'indice.
+   * @returns {boolean}
+   */
+  #matches(data) {
+    const filters = this.#filters;
+    if (!data) return false;
+
+    if (filters.name && !data.name.includes(normalize(filters.name)))
+      return false;
+    if (
+      filters.description &&
+      !data.description.includes(normalize(filters.description))
+    )
+      return false;
+
+    if (filters.rarity) {
+      if (filters.rarity === "__none__") {
+        if (data.rarity) return false;
+      } else if (data.rarity !== filters.rarity) return false;
+    }
+
+    // Il valore mancante va escluso a monte, un confronto diretto lo tratterebbe come zero (null >= 0 è true) facendo passare oggetti senza peso o prezzo.
+
+    if (
+      !GlobalItemEditor.#inRange(
+        data.weight,
+        filters.weightMin,
+        filters.weightMax,
+      )
+    )
+      return false;
+    if (
+      !GlobalItemEditor.#inRange(data.price, filters.priceMin, filters.priceMax)
+    )
+      return false;
+
+    return true;
+  }
+
+  /**
+   * Verifica un intervallo numerico opzionale.
+   * @param {number|null} value  Valore dell'oggetto, `null` se assente.
+   * @param {number|null} min
+   * @param {number|null} max
+   * @returns {boolean}
+   */
+  static #inRange(value, min, max) {
+    if (min === null && max === null) return true;
+    if (value === null || value === undefined) return false;
+    if (min !== null && value < min) return false;
+    if (max !== null && value > max) return false;
+    return true;
+  }
+
+  /**
+   * Nasconde le righe che non superano i filtri e le cartelle rimaste vuote.
+   * Durante il filtraggio le cartelle con risultati vengono aperte in automatico, azzerando i filtri si torna allo stato scelto dall'utente.
+   */
+  #applyFilters() {
+    if (!this.element) return;
+    const filtering = this.#isFiltering;
+    let visible = 0;
+
+    for (const row of this.element.querySelectorAll(".qie-item")) {
+      const matched =
+        !filtering || this.#matches(this.#index.get(row.dataset.itemId));
+      row.classList.toggle("qie-hidden", !matched);
+      if (matched) visible++;
+    }
+
+    // Ordine inverso del documento: le sottocartelle sono valutate prima dei genitori.
+
+    const folders = [...this.element.querySelectorAll(".qie-folder")].reverse();
+    for (const folder of folders) {
+      const details = folder.querySelector(":scope > .qie-details");
+      if (!filtering) {
+        folder.classList.remove("qie-hidden");
+        if (details) details.open = this.#expanded.has(folder.dataset.folderId);
+        continue;
+      }
+      const hasMatch = !!folder.querySelector(".qie-item:not(.qie-hidden)");
+      folder.classList.toggle("qie-hidden", !hasMatch);
+      if (details && hasMatch) details.open = true;
+    }
+
+    const empty = this.element.querySelector(".qie-no-results");
+    if (empty) empty.classList.toggle("qie-hidden", visible > 0 || !filtering);
+
+    const counter = this.element.querySelector(".qie-result-count");
+    if (counter) {
+      counter.textContent = filtering
+        ? game.i18n.format("QIE.Results", { visible, total: this.#index.size })
+        : "";
     }
   }
 
@@ -166,14 +358,36 @@ export class GlobalItemEditor extends HandlebarsApplicationMixin(
     this.#setAllOpen(false);
   }
 
+  /** Mostra o nasconde il pannello dei filtri. */
+  static #onToggleFilters(event, target) {
+    this.#filtersOpen = !this.#filtersOpen;
+    this.element
+      .querySelector(".qie-filters")
+      ?.toggleAttribute("hidden", !this.#filtersOpen);
+    target.classList.toggle("active", this.#filtersOpen);
+  }
+
+  /** Azzera tutti i filtri e la ricerca. */
+  static #onClearFilters() {
+    for (const key of Object.keys(this.#filters)) {
+      this.#filters[key] =
+        key.endsWith("Min") || key.endsWith("Max") ? null : "";
+    }
+    for (const input of this.element.querySelectorAll("[data-filter]"))
+      input.value = "";
+    this.#applyFilters();
+  }
+
   /**
    * @param {boolean} open
    */
   #setAllOpen(open) {
-    for (const details of this.element.querySelectorAll(
-      ".qie-folder > .qie-details",
-    )) {
-      details.open = open;
+    this.#expanded.clear();
+    for (const folder of this.element.querySelectorAll(".qie-folder")) {
+      const details = folder.querySelector(":scope > .qie-details");
+      if (details) details.open = open;
+      if (open && folder.dataset.folderId)
+        this.#expanded.add(folder.dataset.folderId);
     }
   }
 

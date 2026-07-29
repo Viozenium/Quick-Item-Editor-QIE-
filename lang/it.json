@@ -6,14 +6,29 @@
 
   "QIE.Uncategorized": "Senza cartella",
   "QIE.NoItems": "Nessun oggetto presente nel mondo.",
+  "QIE.NoResults": "Nessun oggetto corrisponde ai filtri.",
   "QIE.ItemCount": "{count} oggetti",
   "QIE.FolderCount": "{count} cartelle",
+  "QIE.Results": "{visible} di {total} visibili",
 
   "QIE.Column.Name": "Titolo",
   "QIE.Column.Weight": "Peso",
   "QIE.Column.Price": "Prezzo",
   "QIE.Column.Description": "Descrizione",
   "QIE.Column.Rarity": "Rarità",
+
+  "QIE.Search.Placeholder": "Cerca per titolo...",
+
+  "QIE.Filters.Title": "Filtri",
+  "QIE.Filters.Description": "Descrizione",
+  "QIE.Filters.Rarity": "Rarità",
+  "QIE.Filters.Weight": "Peso",
+  "QIE.Filters.Price": "Prezzo (in mo)",
+  "QIE.Filters.Min": "min",
+  "QIE.Filters.Max": "max",
+  "QIE.Filters.Any": "Tutte",
+  "QIE.Filters.NoRarity": "Senza rarità",
+  "QIE.Filters.Clear": "Azzera",
 
   "QIE.Action.ExpandAll": "Espandi tutto",
   "QIE.Action.CollapseAll": "Comprimi tutto",
