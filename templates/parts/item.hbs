@@ -1,7 +1,81 @@
-<li class="qie-node qie-item" data-item-id="{{id}}" data-uuid="{{uuid}}">
-  <img class="qie-item-img" src="{{img}}" alt="" loading="lazy" />
-  <span class="qie-item-name" data-tooltip="{{typeLabel}}">{{name}}</span>
-  <span class="qie-cell qie-item-rarity">{{rarityLabel}}</span>
-  <span class="qie-cell qie-item-weight">{{weightLabel}}</span>
-  <span class="qie-cell qie-item-price">{{priceLabel}}</span>
+<li
+  class="qie-node qie-item"
+  data-item-id="{{id}}"
+  data-uuid="{{uuid}}"
+  style="--qie-depth: {{depth}}"
+>
+  <img
+    class="qie-item-img"
+    src="{{img}}"
+    alt=""
+    loading="lazy"
+    data-tooltip="{{typeLabel}}"
+  />
+
+  <input
+    class="qie-field qie-item-name"
+    type="text"
+    data-field="name"
+    value="{{name}}"
+    autocomplete="off"
+  />
+
+  {{#if canRarity}}
+  <select class="qie-field qie-item-rarity" data-field="rarity">
+    {{selectOptions @root.rarities selected=rarity valueAttr="value" labelAttr="label" blank=""}}
+  </select>
+  {{else}}
+  <span class="qie-cell qie-item-rarity"></span>
+  {{/if}}
+
+  {{#if canWeight}}
+  <input
+    class="qie-field qie-item-weight"
+    type="number"
+    step="any"
+    min="0"
+    data-field="weight"
+    value="{{weightValue}}"
+  />
+  {{else}}
+  <span class="qie-cell qie-item-weight"></span>
+  {{/if}}
+
+  {{#if canPrice}}
+  <span class="qie-item-price">
+    <input
+      class="qie-field qie-price-value"
+      type="number"
+      step="any"
+      min="0"
+      data-field="price"
+      value="{{priceValue}}"
+    />
+    <select class="qie-field qie-price-denomination" data-field="denomination">
+      {{selectOptions @root.currencies selected=denomination valueAttr="value" labelAttr="label"}}
+    </select>
+  </span>
+  {{else}}
+  <span class="qie-cell qie-item-price"></span>
+  {{/if}}
+
+  <span class="qie-item-actions">
+    <button
+      type="button"
+      class="qie-icon-button"
+      data-action="toggleDescription"
+      data-tooltip="{{localize 'QIE.Column.Description'}}"
+      {{#unless canDescription}}disabled{{/unless}}
+    >
+      <i class="fas fa-align-left"></i>
+    </button>
+    <button
+      type="button"
+      class="qie-icon-button"
+      data-action="openSheet"
+      data-tooltip="{{localize 'QIE.Action.OpenSheet'}}"
+    >
+      <i class="fas fa-up-right-from-square"></i>
+    </button>
+  </span>
 </li>

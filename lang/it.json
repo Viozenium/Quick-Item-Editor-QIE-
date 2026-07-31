@@ -32,7 +32,9 @@
 
   "QIE.Action.ExpandAll": "Espandi tutto",
   "QIE.Action.CollapseAll": "Comprimi tutto",
-  "QIE.Action.Refresh": "Ricarica",
+  "QIE.Action.Refresh": "Ricarica l'elenco",
+  "QIE.Action.OpenSheet": "Apri la scheda",
 
-  "QIE.Notify.GMOnly": "Solo il Game Master può usare l'editor globale degli oggetti."
+  "QIE.Notify.GMOnly": "Solo il Game Master può usare l'editor globale degli oggetti.",
+  "QIE.Notify.SaveFailed": "Salvataggio di \"{name}\" non riuscito."
 }

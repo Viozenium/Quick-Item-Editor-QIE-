@@ -22,6 +22,9 @@
         <button type="button" data-action="collapseAll" data-tooltip="{{localize 'QIE.Action.CollapseAll'}}">
           <i class="fas fa-angles-up"></i>
         </button>
+        <button type="button" data-action="refresh" data-tooltip="{{localize 'QIE.Action.Refresh'}}">
+          <i class="fas fa-arrows-rotate"></i>
+        </button>
       </div>
     </div>
 
@@ -98,6 +101,13 @@
 
   <div class="qie-body">
     {{#if hasItems}}
+    <div class="qie-columns">
+      <span class="qie-col-name">{{localize "QIE.Column.Name"}}</span>
+      <span class="qie-item-rarity">{{localize "QIE.Column.Rarity"}}</span>
+      <span class="qie-item-weight">{{localize "QIE.Column.Weight"}}</span>
+      <span class="qie-item-price">{{localize "QIE.Column.Price"}}</span>
+      <span class="qie-item-actions"></span>
+    </div>
     <ul class="qie-tree">
       {{#each tree.children}}
       {{> qieFolder}}

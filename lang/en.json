@@ -32,7 +32,9 @@
 
   "QIE.Action.ExpandAll": "Expand all",
   "QIE.Action.CollapseAll": "Collapse all",
-  "QIE.Action.Refresh": "Refresh",
+  "QIE.Action.Refresh": "Refresh the list",
+  "QIE.Action.OpenSheet": "Open the sheet",
 
-  "QIE.Notify.GMOnly": "Only the Game Master can use the global item editor."
+  "QIE.Notify.GMOnly": "Only the Game Master can use the global item editor.",
+  "QIE.Notify.SaveFailed": "Could not save \"{name}\"."
 }
