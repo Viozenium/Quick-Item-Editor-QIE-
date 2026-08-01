@@ -25,6 +25,11 @@ MIT - vedi [LICENSE](LICENSE).
 
 ## Changelog
 
+### 0.4.1 - Leggibilita dei menu a tendina e dell'editor di descrizione
+
+- Le voci dei menu a tendina non sono piu bianche su bianco: con lo sfondo del select trasparente il browser disegnava la tendina in bianco, mentre il testo ereditava il colore chiaro del tema.
+- L'area di scrittura della descrizione ha ora un'altezza minima esplicita, fuori da una scheda l'editor ProseMirror non la riceve dal contenitore e restava collassata, lasciando visibile solo la barra dei menu.
+
 ### 0.4.0 - Modifica inline e salvataggio in tempo reale
 
 - Titolo, rarita, peso e prezzo (valore e valuta) modificabili direttamente nella riga.
